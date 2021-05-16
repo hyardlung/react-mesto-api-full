@@ -3,7 +3,7 @@ const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 const { errors, celebrate, Joi } = require('celebrate');
-const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -13,9 +13,10 @@ const NotFoundError = require('./errors/not-found-err');
 const app = express();
 const { PORT = 3000 } = process.env;
 
+app.use(cors());
+
 app.use(helmet());
 app.use(express.json());
-app.use(cookieParser());
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
