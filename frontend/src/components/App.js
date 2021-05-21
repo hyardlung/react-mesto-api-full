@@ -14,7 +14,6 @@ import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 
 import {ProtectedRoute} from './ProtectedRoute';
-import * as auth from '../auth';
 import {Register} from './Register';
 import {Login} from './Login';
 import {InfoTooltip} from "./InfoTooltip";
@@ -61,7 +60,7 @@ export default function App() {
 
   // Регистрация
   const handleRegister = ({email, password}) => {
-    return auth.register({email, password})
+    return api.register({email, password})
         .then(() => {
             handleInfoToolTipStatus({icon: tooltipSuccess, caption: 'Вы успешно зарегистрировались!'});
             handleInfoToolTipVisible(true);
@@ -75,13 +74,13 @@ export default function App() {
 
   // Авторизация
   const handleLogin = ({email, password}) => {
-    auth.authorize(email, password)
+    api.authorize(email, password)
         .then(data => {
           console.log(data)
           if (!data) throw new Error('Неверные имя пользователя или пароль')
           if (data.token) {
             setLoggedIn(true);
-            auth.getContent(data.token)
+            api.getContent(data.token)
                 .then(res => {
                   if (res) {
                     setLoggedIn(true);
@@ -104,7 +103,7 @@ export default function App() {
   const tokenCheck = () => {
     if (localStorage.getItem('jwt')) {    // если токен есть в localStorage,
       let jwt = localStorage.getItem('jwt');    // берём его оттуда
-      auth.getContent(jwt)
+      api.getContent(jwt)
           .then(res => {
             if (res) {
               setLoggedIn(true);
