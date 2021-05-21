@@ -16,6 +16,7 @@ module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
+
   bcrypt.hash(password, SALT_ROUNDS)
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
@@ -35,19 +36,14 @@ module.exports.createUser = (req, res, next) => {
 // АВТОРИЗАЦИЯ
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-  User.findUserByCredentials(email, password)
+  return User.findUserByCredentials({ email, password })
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
         { expiresIn: '7d' },
       );
-      res.cookie('mestoToken', token, {
-        maxAge: 360000,
-        httpOnly: true,
-        sameSite: true,
-      })
-        .send({ _id: user._id });
+      res.send({ token });
     })
     .catch(() => {
       throw new UnauthorizedError('Неправильные почта или пароль');
