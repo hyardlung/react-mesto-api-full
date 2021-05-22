@@ -36,6 +36,10 @@ export default function App() {
   const history = useHistory();
 
 
+  const getToken = () => {
+    return localStorage.getItem('token');
+  }
+
   // Проверка токена
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const tokenCheck = () => {
@@ -177,8 +181,10 @@ export default function App() {
   }
   // обработчик редактирования аватара
   const handleUpdateAvatar = newData => {
-    api.updateAvatar(newData)
-        .then(res => setCurrentUser(res))
+    api.updateAvatar(newData, getToken())
+        .then(updatedUser => {
+          setCurrentUser(updatedUser);
+        })
         .then(() => closeAllPopups())
         .catch(err => console.log(err))
   }

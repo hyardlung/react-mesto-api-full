@@ -72,10 +72,13 @@ class Api {
     }).then(this._getResponse)
   }
   // запрос на обновление аватара пользователя
-  updateAvatar(imgUrl) {
+  updateAvatar(imgUrl, token) {
     return fetch(`${this._url}/users/me/avatar`, {
       method: 'PATCH',
-      headers: this._headers,
+      headers: {
+        ...this._headers,
+        'Authorization': `${token}`
+      },
       body: JSON.stringify({avatar: imgUrl.avatar})
     }).then(this._getResponse)
   }
