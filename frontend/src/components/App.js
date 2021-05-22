@@ -174,17 +174,15 @@ export default function App() {
 
   // обработчик редактирования профиля
   const handleUpdateUser = newData => {
-    api.editUserData(newData)
-        .then(res => setCurrentUser(res))
+    api.editUserData(newData, getToken())
+        .then(updatedUser => setCurrentUser(updatedUser))
         .then(() => closeAllPopups())
         .catch(err => console.log(err))
   }
   // обработчик редактирования аватара
   const handleUpdateAvatar = newData => {
     api.updateAvatar(newData, getToken())
-        .then(updatedUser => {
-          setCurrentUser(updatedUser);
-        })
+        .then(updatedUser => setCurrentUser(updatedUser))
         .then(() => closeAllPopups())
         .catch(err => console.log(err))
   }

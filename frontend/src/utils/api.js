@@ -22,11 +22,14 @@ class Api {
   }
 
   // запрос на редактирование данных профиля (тоже своего есессено)
-  editUserData({name, about}) {
+  editUserData(userData, token) {
     return fetch(`${this._url}/users/me`, {
       method: 'PATCH',
-      headers: this._headers,
-      body: JSON.stringify({name, about})
+      headers: {
+        ...this._headers,
+        'Authorization': `${token}`
+      },
+      body: JSON.stringify(userData)
     }).then(this._getResponse)
   }
 
