@@ -44,11 +44,14 @@ class Api {
   }
 
   // запрос на добавление карточки на сервер
-  sendCard(name, link) {
+  sendCard(cardData, token) {
     return fetch(`${this._url}/cards`, {
       method: 'POST',
-      headers: this._headers,
-      body: JSON.stringify(name, link)
+      headers: {
+        ...this._headers,
+        'Authorization': `${token}`
+      },
+      body: JSON.stringify(cardData)
     }).then(this._getResponse)
   }
 

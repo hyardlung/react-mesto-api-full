@@ -77,7 +77,7 @@ export default function App() {
       ])
           .then(([userData, remoteCards]) => {
             setCurrentUser(userData);
-            setCards(remoteCards);
+            setCards(remoteCards.reverse());
           })
           .catch(err => console.log(err));
     }
@@ -187,8 +187,8 @@ export default function App() {
         .catch(err => console.log(err))
   }
   // обработчик добавления карточки
-  const handleAddPlaceSubmit = (card) => {
-    api.sendCard(card)
+  const handleAddPlaceSubmit = card => {
+    api.sendCard(card, getToken())
         .then(newCard => setCards([newCard, ...cards]))
         .then(() => closeAllPopups())
         .catch(err => console.log(err))
