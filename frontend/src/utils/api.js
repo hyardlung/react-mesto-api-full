@@ -1,6 +1,3 @@
-export const BASE_URL = 'http://localhost:3001';
-// const BASE_URL = 'https://api.hyardlung-frontend.nomoredomains.icu';
-
 class Api {
   constructor(params) {
     this._url = params.url;
@@ -15,9 +12,12 @@ class Api {
   }
 
   // запрос на получение данных своего профиля
-  getUserData() {
+  getUserData(token) {
     return fetch(`${this._url}/users/me`, {
-      headers: this._headers
+      headers: {
+        ...this._headers,
+        'Authorization': `${token}`
+      }
     }).then(this._getResponse)
   }
 
@@ -31,9 +31,12 @@ class Api {
   }
 
   // запрос карточек с сервера
-  getRemoteCards() {
+  getRemoteCards(token) {
     return fetch(`${this._url}/cards`, {
-      headers: this._headers
+      headers: {
+        ...this._headers,
+        'Authorization': `${token}`
+      }
     }).then(this._getResponse)
   }
 
@@ -83,41 +86,34 @@ class Api {
         this.setLike(cardId)
   }
 
-  register = ({email, password}) => {
-    return fetch(`${BASE_URL}/signup`, {
+  register(data) {
+    return fetch(`${this._url}/sign-up`, {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        ...this._headers,
       },
-      body: JSON.stringify({email, password})
-    })
-        .then(this._getResponse)
+      body: JSON.stringify(data)
+    }).then(this._getResponse)
   };
 
-  authorize = (email, password) => {
-    return fetch(`${BASE_URL}/signin`, {
+  authorize(data) {
+    return fetch(`${this._url}/sign-in`, {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        ...this._headers,
       },
-      body: JSON.stringify({email, password})
-    })
-        .then(this._getResponse)
+      body: JSON.stringify(data)
+    }).then(this._getResponse)
   }
 
 // проверка токена и получение данных пользователя
-  getContent = (token) => {
-    return fetch(`${BASE_URL}/users/me`, {
-      method: 'GET',
+  getContent(token) {
+    return fetch(`${this._url}/users/me`, {
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        ...this._headers,
+        'Authorization': `${token}`
       }
-    })
-        .then(this._getResponse)
+    }).then(this._getResponse)
   }
 }
 
@@ -125,8 +121,8 @@ export const api = new Api({
   url: 'http://localhost:3001',
   // url: 'https://api.hyardlung-frontend.nomoredomains.icu',
   headers: {
+    'Accept': 'application/json',
     'Content-Type': 'application/json',
-    'Authorization': `${localStorage.getItem('token')}`,
   }
 });
 

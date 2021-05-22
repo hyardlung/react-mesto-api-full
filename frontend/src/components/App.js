@@ -35,28 +35,49 @@ export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const history = useHistory();
 
-  // хук, подтягивающий данные о пользователе и массив карточек с сервера
-  useEffect(() => {
-    Promise.all([
-      api.getRemoteCards(),
-      api.getUserData()
-    ])
-        .then(([remoteCards, userData]) => {
-          setCards(remoteCards);
-          setCurrentUser(userData);
-        })
-        .catch(err => console.log(err));
-  }, []);
+
+  // Проверка токена
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const tokenCheck = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      api.getContent(token)
+          .then(res => {
+            if (res.email) {
+              setUserEmail(res.email);
+              setLoggedIn(true);
+              history.push('/main');
+            }
+          })
+          .catch(err => console.log(err));
+    }
+  };
 
   useEffect(() => {
     tokenCheck()
-  }, [])
+  }, [tokenCheck])
 
   useEffect(() => {
     if (loggedIn) {
       history.push('/main')
     }
   }, [history, loggedIn])
+
+  // хук, подтягивающий данные о пользователе и массив карточек с сервера
+  useEffect(() => {
+    if (loggedIn) {
+      const token = localStorage.getItem('token');
+      Promise.all([
+        api.getUserData(token),
+        api.getRemoteCards(token)
+      ])
+          .then(([userData, remoteCards]) => {
+            setCurrentUser(userData);
+            setCards(remoteCards);
+          })
+          .catch(err => console.log(err));
+    }
+  }, [loggedIn]);
 
   // Регистрация
   const handleRegister = ({email, password}) => {
@@ -74,48 +95,29 @@ export default function App() {
 
   // Авторизация
   const handleLogin = ({email, password}) => {
-    api.authorize(email, password)
+    api.authorize({email, password})
         .then(data => {
-          console.log(data)
-          if (!data) throw new Error('Неверные имя пользователя или пароль')
+          if (!data) throw new Error('Неверные имя пользователя или пароль');
           if (data.token) {
-            setLoggedIn(true);
+            localStorage.setItem('token', data.token);
             api.getContent(data.token)
-                .then(res => {
-                  if (res) {
-                    setLoggedIn(true);
-                    setUserEmail(res.data.email);
-                  }
-                })
-            localStorage.setItem('jwt', data.token);
+                .then(res => setUserEmail(res.email));
+            setLoggedIn(true);
             history.push('/main')
             handleInfoToolTipStatus({icon: tooltipSuccess, caption: 'Вы успешно авторизовались!'});
             handleInfoToolTipVisible(true);
           }
-        }).catch(err => {
+        })
+        .catch(err => {
           handleInfoToolTipStatus({icon: tooltipDeny, caption: 'Что-то пошло не так! Попробуйте ещё раз.'});
           handleInfoToolTipVisible(true);
           console.log(err);
         });
   };
 
-  // Проверка токена
-  const tokenCheck = () => {
-    if (localStorage.getItem('jwt')) {    // если токен есть в localStorage,
-      let jwt = localStorage.getItem('jwt');    // берём его оттуда
-      api.getContent(jwt)
-          .then(res => {
-            if (res) {
-              setLoggedIn(true);
-              setUserEmail(res.data.email);
-            }
-          })
-          .catch(err => console.log(err));
-    }
-  };
   // Выход
   const handleSignOut = () => {
-    localStorage.removeItem('jwt');
+    localStorage.removeItem('token');
     setLoggedIn(false);
     setUserData({email: ''});
     history.push('/sign-in');

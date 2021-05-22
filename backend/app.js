@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const { errors, celebrate, Joi } = require('celebrate');
 const cors = require('cors');
 const { createUser, login } = require('./controllers/users');
@@ -10,13 +11,11 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const NotFoundError = require('./errors/not-found-err');
 
+const { PORT = 3001 } = process.env;
+
 const app = express();
-const { PORT = 3000 } = process.env;
-
-app.use(cors());
-
-app.use(helmet());
 app.use(express.json());
+app.use(helmet());
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
@@ -25,9 +24,12 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useUnifiedTopology: true,
 });
 
-app.use(requestLogger);
+app.use(bodyParser.json());
 
-app.post('/signup', celebrate({
+app.use(requestLogger);
+app.use(cors());
+
+app.post('/sign-up', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
@@ -36,7 +38,7 @@ app.post('/signup', celebrate({
     password: Joi.string().required(),
   }),
 }), createUser);
-app.post('/signin', celebrate({
+app.post('/sign-in', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().min(8).required(),
