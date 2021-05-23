@@ -34,12 +34,11 @@ module.exports.deleteCardById = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Такой карточки не существует');
       }
-      if (card.owner._id.toString() !== owner) {
+      if (owner.toString() !== owner) {
         throw new ForbiddenError('В доступе отказано');
       }
       // поиск и удаление карточки
       return Card.findByIdAndRemove(cardId)
-        .populate(['owner', 'likes'])
         .then(() => res.send({ message: 'Карточка успешно удалена' }))
         .catch(next);
     })
@@ -55,7 +54,6 @@ module.exports.likeCard = (req, res, next) => {
     { $addToSet: { likes: owner } },
     { new: true, runValidators: true },
   )
-    .populate(['owner', 'likes'])
     .then((card) => {
       if (!card) throw new NotFoundError('Такой карточки не существует');
       res.send(card);
@@ -70,10 +68,7 @@ module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     cardId,
     { $pull: { likes: owner } },
-    {
-      new: true,
-      runValidators: true,
-    },
+    { new: true, runValidators: true },
   )
     .then((card) => {
       if (!card) throw new NotFoundError('Такой карточки не существует');

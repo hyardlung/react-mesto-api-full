@@ -44,7 +44,7 @@ class Api {
   }
 
   // запрос на добавление карточки на сервер
-  sendCard(cardData, token) {
+  sendCard(token, cardData) {
     return fetch(`${this._url}/cards`, {
       method: 'POST',
       headers: {
@@ -56,25 +56,34 @@ class Api {
   }
 
   // запрос на удаление карточки с сервера
-  deleteCard(cardId) {
+  deleteCard(token, cardId) {
     return fetch(`${this._url}/cards/${cardId}`, {
       method: 'DELETE',
-      headers: this._headers
+      headers: {
+        ...this._headers,
+        'Authorization': `${token}`
+      }
     }).then(this._getResponse)
   }
 
   // запрос на добавление лайка карточке
-  setLike(cardId) {
-    return fetch(`${this._url}/cards/likes/${cardId}`, {
+  setLike(token, cardId) {
+    return fetch(`${this._url}/cards/${cardId}/likes`, {
       method: 'PUT',
-      headers: this._headers
+      headers: {
+        ...this._headers,
+        'Authorization': `${token}`
+      }
     }).then(this._getResponse)
   }
   // запрос на удаление лайка карточки
-  removeLike(cardId) {
-    return fetch(`${this._url}/cards/likes/${cardId}`, {
+  removeLike(token, cardId) {
+    return fetch(`${this._url}/cards/${cardId}/likes`, {
       method: 'DELETE',
-      headers: this._headers
+      headers: {
+        ...this._headers,
+        'Authorization': `${token}`
+      }
     }).then(this._getResponse)
   }
   // запрос на обновление аватара пользователя
@@ -87,12 +96,6 @@ class Api {
       },
       body: JSON.stringify({avatar: imgUrl.avatar})
     }).then(this._getResponse)
-  }
-  // изменение статуса кнопки лайка
-  changeLikeCardStatus(cardId, isLiked) {
-    return isLiked ?
-        this.removeLike(cardId) :
-        this.setLike(cardId)
   }
 
   register(data) {

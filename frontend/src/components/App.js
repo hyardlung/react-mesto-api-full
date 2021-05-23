@@ -155,19 +155,26 @@ export default function App() {
   }
 
   // лайк карточки
-  const handleCardLike = card => {
-    const isLiked = card.likes.some(like => like._id === currentUser._id);
-    api.changeLikeCardStatus(card._id, isLiked)
-        .then(res => {
-          setCards(state => state.map(c => c._id === card._id ? res : c))
+  const handleCardLike = (isLiked, card) => {
+    const changeLikeCardStatus = isLiked
+        ? api.removeLike.bind(api)
+        : api.setLike.bind(api);
+    changeLikeCardStatus(getToken(), card._id, !isLiked)
+        .then(newCard => {
+          const newCards = cards.map(cardItem => cardItem._id === card._id
+          ? newCard
+          : cardItem);
+          setCards(newCards)
         })
         .catch(err => console.log(err));
   }
+
   // удаление карточки
   const handleCardDelete = card => {
-    api.deleteCard(card._id)
+    api.deleteCard(getToken(), card._id)
         .then(() => {
-          setCards(state => state.filter(c => c._id !== card._id))
+          const newCards = cards.filter(cardItem => cardItem._id !== card._id);
+          setCards(newCards)
         })
         .catch(err => console.log(err));
   }
@@ -188,7 +195,7 @@ export default function App() {
   }
   // обработчик добавления карточки
   const handleAddPlaceSubmit = card => {
-    api.sendCard(card, getToken())
+    api.sendCard(getToken(), card)
         .then(newCard => setCards([newCard, ...cards]))
         .then(() => closeAllPopups())
         .catch(err => console.log(err))
