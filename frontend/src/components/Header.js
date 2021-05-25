@@ -13,11 +13,11 @@ export default function Header({loggedIn, handleSignOut, userEmail}) {
                 </>
               ) : (
                   <Switch>
-                    <Route path="/sign-up">
-                      <Link to="/sign-in" className="header__link">Войти</Link>
+                    <Route path="/signup">
+                      <Link to="/signin" className="header__link">Войти</Link>
                     </Route>
-                    <Route path="/sign-in">
-                      <Link to="/sign-up" className="header__link">Регистрация</Link>
+                    <Route path="/signin">
+                      <Link to="/signup" className="header__link">Регистрация</Link>
                     </Route>
                   </Switch>
               )

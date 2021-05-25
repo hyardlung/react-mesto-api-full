@@ -99,7 +99,7 @@ class Api {
   }
 
   register(data) {
-    return fetch(`${this._url}/sign-up`, {
+    return fetch(`${this._url}/signup`, {
       method: 'POST',
       headers: {
         ...this._headers,
@@ -109,7 +109,7 @@ class Api {
   };
 
   authorize(data) {
-    return fetch(`${this._url}/sign-in`, {
+    return fetch(`${this._url}/signin`, {
       method: 'POST',
       headers: {
         ...this._headers,

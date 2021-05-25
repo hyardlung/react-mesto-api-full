@@ -65,7 +65,7 @@ export const Register = ({onRegister}) => {
         </form>
         <div className="auth__signin">
           <span>Уже зарегистрированы?</span>
-          <Link to="sign-in" className="auth__login-link">Войти</Link>
+          <Link to="signin" className="auth__login-link">Войти</Link>
         </div>
       </section>
   )

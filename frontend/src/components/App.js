@@ -89,7 +89,7 @@ export default function App() {
         .then(() => {
             handleInfoToolTipStatus({icon: tooltipSuccess, caption: 'Вы успешно зарегистрировались!'});
             handleInfoToolTipVisible(true);
-            history.push('/sign-in');
+            history.push('/signin');
         }).catch(err => {
           handleInfoToolTipStatus({icon: tooltipDeny, caption: 'Что-то пошло не так! Попробуйте ещё раз.'});
           handleInfoToolTipVisible(true);
@@ -124,7 +124,7 @@ export default function App() {
     localStorage.removeItem('token');
     setLoggedIn(false);
     setUserData({email: ''});
-    history.push('/sign-in');
+    history.push('/signin');
   };
 
   // ОБРАБОТЧИКИ СОБЫТИЙ
@@ -238,15 +238,15 @@ export default function App() {
                             onCardLike={handleCardLike}
                             onCardDelete={handleCardDelete}
             />
-            <Route path="/sign-in">
+            <Route path="/signin">
               <Login onLogin={handleLogin}/>
             </Route>
-            <Route path="/sign-up">
+            <Route path="/signup">
               <Register onRegister={handleRegister}/>
             </Route>
 
             <Route>
-              {loggedIn ? <Redirect to="/"/> : <Redirect to="/sign-in"/>}
+              {loggedIn ? <Redirect to="/"/> : <Redirect to="/signin"/>}
             </Route>
           </Switch>
           {loggedIn && <Footer/>}

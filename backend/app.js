@@ -36,7 +36,7 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.post('/sign-up', celebrate({
+app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
@@ -45,7 +45,7 @@ app.post('/sign-up', celebrate({
     password: Joi.string().required(),
   }),
 }), createUser);
-app.post('/sign-in', celebrate({
+app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().min(8).required(),
