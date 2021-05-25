@@ -16,7 +16,7 @@ class Api {
     return fetch(`${this._url}/users/me`, {
       headers: {
         ...this._headers,
-        'Authorization': `${token}`
+        'Authorization': `Bearer ${token}`
       }
     }).then(this._getResponse)
   }
@@ -27,7 +27,7 @@ class Api {
       method: 'PATCH',
       headers: {
         ...this._headers,
-        'Authorization': `${token}`
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(userData)
     }).then(this._getResponse)
@@ -38,7 +38,7 @@ class Api {
     return fetch(`${this._url}/cards`, {
       headers: {
         ...this._headers,
-        'Authorization': `${token}`
+        'Authorization': `Bearer ${token}`
       }
     }).then(this._getResponse)
   }
@@ -49,7 +49,7 @@ class Api {
       method: 'POST',
       headers: {
         ...this._headers,
-        'Authorization': `${token}`
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(cardData)
     }).then(this._getResponse)
@@ -61,7 +61,7 @@ class Api {
       method: 'DELETE',
       headers: {
         ...this._headers,
-        'Authorization': `${token}`
+        'Authorization': `Bearer ${token}`
       }
     }).then(this._getResponse)
   }
@@ -72,7 +72,7 @@ class Api {
       method: 'PUT',
       headers: {
         ...this._headers,
-        'Authorization': `${token}`
+        'Authorization': `Bearer ${token}`
       }
     }).then(this._getResponse)
   }
@@ -82,7 +82,7 @@ class Api {
       method: 'DELETE',
       headers: {
         ...this._headers,
-        'Authorization': `${token}`
+        'Authorization': `Bearer ${token}`
       }
     }).then(this._getResponse)
   }
@@ -92,7 +92,7 @@ class Api {
       method: 'PATCH',
       headers: {
         ...this._headers,
-        'Authorization': `${token}`
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({avatar: imgUrl.avatar})
     }).then(this._getResponse)
@@ -123,7 +123,7 @@ class Api {
     return fetch(`${this._url}/users/me`, {
       headers: {
         ...this._headers,
-        'Authorization': `${token}`
+        'Authorization': `Bearer ${token}`
       }
     }).then(this._getResponse)
   }
