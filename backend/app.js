@@ -8,6 +8,7 @@ const cors = require('cors');
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const errorHandler = require('./middlewares/error-handler');
 
 const NotFoundError = require('./errors/not-found-err');
 
@@ -64,25 +65,6 @@ app.use('*', () => {
 });
 
 app.use(errors());
-
-app.use((err, req, res, next) => {
-  const { statusCode = 400, message } = err;
-  res.status(statusCode).send({
-    message: statusCode === 400
-      ? 'Некорректный формат ID карточки'
-      : message,
-  });
-  next();
-});
-
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res.status(statusCode).send({
-    message: statusCode === 500
-      ? 'На сервере произошла ошибка'
-      : message,
-  });
-  next();
-});
+app.use(errorHandler);
 
 app.listen(PORT);

@@ -54,10 +54,8 @@ module.exports.login = (req, res, next) => {
 // получение залогиненного пользователя
 module.exports.getMe = (req, res, next) => {
   User.findById(req.user._id)
-    .then((user) => {
-      if (!user) throw new NotFoundError('Пользователь с таким ID не найден');
-      res.send(user);
-    })
+    .orFail(new NotFoundError('Пользователь с таким ID не найден'))
+    .then((user) => res.send(user))
     .catch(next);
 };
 
@@ -65,10 +63,8 @@ module.exports.getMe = (req, res, next) => {
 module.exports.getUserById = (req, res, next) => {
   const { userId } = req.params;
   User.findById(userId)
-    .then((user) => {
-      if (!user) throw new NotFoundError('Пользователь с таким ID не найден');
-      return res.send(user);
-    })
+    .orFail(new NotFoundError('Пользователь с таким ID не найден'))
+    .then((user) => res.send(user))
     .catch(next);
 };
 
@@ -90,10 +86,8 @@ module.exports.updateProfile = (req, res, next) => {
       runValidators: true,
     },
   )
-    .then((user) => {
-      if (!user) throw new NotFoundError('Пользователь с таким ID не найден');
-      res.send(user);
-    })
+    .orFail(new NotFoundError('Пользователь с таким ID не найден'))
+    .then((user) => res.send(user))
     .catch(next);
 };
 
@@ -108,9 +102,7 @@ module.exports.updateAvatar = (req, res, next) => {
       runValidators: true,
     },
   )
-    .then((user) => {
-      if (!user) throw new NotFoundError('Пользователь с таким ID не найден');
-      return res.send(user);
-    })
+    .orFail(new NotFoundError('Пользователь с таким ID не найден'))
+    .then((user) => res.send(user))
     .catch(next);
 };
