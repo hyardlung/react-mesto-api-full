@@ -130,8 +130,8 @@ class Api {
 }
 
 export const api = new Api({
-  // url: 'http://localhost:3001',
-  url: 'https://api.hyardlung-frontend.nomoredomains.icu',
+  url: 'http://localhost:3001',
+  // url: 'https://api.hyardlung-frontend.nomoredomains.icu',
   headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
