@@ -78,6 +78,7 @@ module.exports.getUsers = (req, res, next) => {
 // обновление данных пользователя
 module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
+  if (!name || !about) throw new BadRequestError('Переданы некорректные данные при обновлении пользователя');
   return User.findByIdAndUpdate(
     req.user._id,
     { name, about },
@@ -94,6 +95,7 @@ module.exports.updateProfile = (req, res, next) => {
 // обновление аватара пользователя
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
+  // if (avatar === '') throw new BadRequestError('Поле не может быть пустым');
   User.findByIdAndUpdate(
     req.user._id,
     { avatar },
