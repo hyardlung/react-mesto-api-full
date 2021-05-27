@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+const validator = require('validator');
+
 const {
   getUsers,
   getUserById,
@@ -23,7 +25,14 @@ router.patch('/me', celebrate({
 }), updateProfile);
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().trim().uri(),
+    avatar: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value, {
+        protocols: ['http', 'https', 'ftp'],
+        require_tld: true,
+        required_protocol: true,
+      })) return value;
+      return helpers.message('Некорректный формат ссылки');
+    }),
   }),
 }), updateAvatar);
 

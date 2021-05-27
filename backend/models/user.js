@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const validator = require('validator');
-
 const UnauthorizedError = require('../errors/unauthorized-err');
 
 const userSchema = new mongoose.Schema({
@@ -23,9 +22,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator(url) {
-        return /^(http:\/\/|https:\/\/)w*\w/.test(url);
-      },
+      validator: (value) => validator.isURL(value, {
+        protocols: ['http', 'https', 'ftp'],
+        require_tld: true,
+        required_protocol: true,
+      }),
       message: 'Некорректный формат ссылки',
     },
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
@@ -35,9 +36,9 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     validate: {
-      validator(value) {
-        return validator.isEmail(value);
-      },
+      validator: (value) => validator.isEmail(value, {
+        require_tld: true,
+      }),
       message: 'Некорректный формат электронной почты',
     },
   },
