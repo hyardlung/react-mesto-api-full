@@ -42,11 +42,11 @@ app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().required().custom((value, helpers) => {
+    avatar: Joi.string().custom((value, helpers) => {
       if (validator.isURL(value, {
         protocols: ['http', 'https', 'ftp'],
         require_tld: true,
-        required_protocol: true,
+        require_protocol: true,
       })) return value;
       return helpers.message('Некорректный формат ссылки');
     }),

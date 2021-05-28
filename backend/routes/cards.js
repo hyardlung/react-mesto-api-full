@@ -18,7 +18,7 @@ router.post('/', celebrate({
       if (validator.isURL(value, {
         protocols: ['http', 'https', 'ftp'],
         require_tld: true,
-        required_protocol: true,
+        require_protocol: true,
       })) return value;
       return helpers.message('Некорректный формат ссылки');
     }),
